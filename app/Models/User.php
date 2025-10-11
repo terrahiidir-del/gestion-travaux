@@ -2,31 +2,36 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail; 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail // verification par lien 
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
     /**
-     * The attributes that are mass assignable.
+     * Les attributs qui peuvent être assignés en masse.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
     protected $fillable = [
+        'prenom',
         'name',
         'email',
+        'telephone',
+        'adresse_postale',
+        'code_postal',
+        'ville',
         'password',
+        'role',
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
+     * Les attributs à masquer pour la sérialisation.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
     protected $hidden = [
         'password',
@@ -34,15 +39,23 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * Les attributs qui doivent être castés.
      *
      * @return array<string, string>
      */
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
+            'email_verified_at' => 'datetime', //  pour la vérif
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * technicien peut avoir plusieurs disponibilités.
+     */
+    public function disponibilites()
+    {
+        return $this->hasMany(Disponibilite::class, 'user_id');
     }
 }
