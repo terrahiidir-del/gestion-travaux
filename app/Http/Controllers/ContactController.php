@@ -28,25 +28,25 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
-        // Bloquer la soumission pour les admins
+        // ❌ Bloquer la soumission pour les admins
         if (Auth::check() && Auth::user()->is_admin) {
             abort(403, 'Action non autorisée pour un administrateur.');
         }
 
-        //  Validation du formulaire
+        // ✅ Validation du formulaire
         $validated = $request->validate([
             'nom' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'message' => 'required|string',
         ]);
 
-        // Enregistrer le message dans la base
+        // ✅ Enregistrer le message dans la base
         Contact::create($validated);
 
-        // ENVOI DE L'EMAIL à ton adresse Gmail (configurée dans .env)
+        // ✅ ENVOI DE L'EMAIL à ton adresse Gmail (configurée dans .env)
         Mail::to('anis.boubakricristal@gmail.com')->send(new ContactMessage($validated));
 
-        //  Message de succès pour l'utilisateur
+        // ✅ Message de succès pour l'utilisateur
         return redirect()->back()->with('success', '✅ Votre message a bien été envoyé ! Nous vous répondrons bientôt.');
     }
 

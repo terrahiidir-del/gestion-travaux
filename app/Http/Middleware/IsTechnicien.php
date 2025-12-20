@@ -8,18 +8,15 @@ use Symfony\Component\HttpFoundation\Response;
 
 class IsTechnicien
 {
-    public function handle(Request $request, Closure $next): Response
-    {
-        // Non connecté → rediriger vers login
-        if (!$request->user()) {
-            return redirect()->route('login'); // ou redirect('/login')
-        }
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
+    public function handle($request, Closure $next)
+{
+    if (auth()->user()->role !== 'technicien') abort(403);
+    return $next($request);
+}
 
-        // Connecté mais pas technicien → 403
-        if ($request->user()->role !== 'technicien') {
-            abort(403, 'Accès refusé. Réservé aux techniciens.');
-        }
-
-        return $next($request);
-    }
 }

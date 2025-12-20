@@ -10,17 +10,17 @@ class Demande extends Model
     use HasFactory;//utilisatoin de belongsTo
 
     protected $fillable = [
-        'user_id',
-        'type_travaux',
-        'description',
-        'nom',
-        'prenom',
-        'email',
-        'telephone',
-        'adresse',
-        'code_postal',
-        'ville',
-        'statut',
+    'type_travaux',
+    'description',
+    'nom',
+    'prenom',
+    'email',
+    'telephone',
+    'adresse',
+    'code_postal',
+    'ville',
+    'user_id',
+    'statut',
     ];
 
     /**

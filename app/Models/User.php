@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail; 
+// ⛔️ On enlève MustVerifyEmail
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable implements MustVerifyEmail // verification par lien 
+class User extends Authenticatable // ⛔️ On enlève "implements MustVerifyEmail"
 {
     use HasFactory, Notifiable;
 
@@ -46,7 +47,7 @@ class User extends Authenticatable implements MustVerifyEmail // verification pa
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime', //  pour la vérif
+            'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
