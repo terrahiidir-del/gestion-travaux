@@ -12,16 +12,15 @@ use Illuminate\View\View;
 class ConfirmablePasswordController extends Controller
 {
     /**
-     * Show the confirm password view.
+     * Afficher la fenêtre de confirmation du mot de passe.
      */
     public function show(): View
     {
         return view('auth.confirm-password');
     }
 
-    /**
-     * Confirm the user's password.
-     */
+    //Confirmez le mot de passe de l'utilisateur.
+     
     public function store(Request $request): RedirectResponse
     {
         if (! Auth::guard('web')->validate([

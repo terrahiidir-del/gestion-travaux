@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Database\Seeders\DisponibiliteSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -12,13 +13,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // ⚠️ Exemple : on peut garder ce user de test, ou commenter si inutile
+        // Exemple : on peut garder ce user de test, ou commenter si inutile
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
 
-        // ✅ Ajout de l’appel au DisponibiliteSeeder
+        // Ajout de l’appel au DisponibiliteSeeder
         $this->call([
             DisponibiliteSeeder::class,
         ]);

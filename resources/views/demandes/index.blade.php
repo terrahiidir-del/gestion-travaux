@@ -5,7 +5,7 @@
 @section('content')
 <div class="py-5" style="min-height: 100vh;">
     <div class="container bg-white bg-opacity-90 rounded shadow p-4">
-        <h1 class="mb-4 fw-bold text-primary">📋 Mes Demandes</h1>
+        <h1 class="mb-4 fw-bold text-primary"> Mes Demandes</h1>
 
         {{-- Bouton ajout --}}
         <div class="mb-3 text-end">
@@ -33,7 +33,7 @@
                             <th>Date de la demande</th>
                             <th>Statut</th>
                             <th>Montant du devis</th>
-                            <th>📅 Intervention</th>
+                            <th>Intervention</th>
                             <th class="text-center">Actions</th>
                         </tr>
                     </thead>
@@ -84,19 +84,24 @@
                                             @endphp
 
                                             @if($dt)
-                                                📅 <strong>{{ $dt->format('d/m/Y H:i') }}</strong><br>
+                                                 <strong>{{ $dt->format('d/m/Y H:i') }}</strong><br>
                                             @endif
-                                            👨‍🔧 <em>{{ optional($i->technicien)->name ?? 'Non assigné' }}</em>
+                                             <em>{{ optional($i->technicien)->name ?? 'Non assigné' }}</em>
                                         @else
                                             <span class="text-muted">Aucune intervention planifiée</span>
                                         @endif
                                     </td>
 
                                     <td class="text-center">
-                                        @php $aUnDevis = (bool) $demande->devis; @endphp
+                                        @php
+                                            $aUnDevis = (bool) $demande->devis;
+                                            $rep = $aUnDevis ? $demande->devis->reponse_client : null;
+                                            // ✅ En attente si null OU "en attente"
+                                            $enAttente = in_array($rep, [null, 'en attente'], true);
+                                        @endphp
 
                                         @if(!$demande->supprime_par_client)
-                                            {{-- ✏️ Modifier : apparaît seulement si la policy autorise (et donc avant devis) --}}
+                                            {{--  Modifier : apparaît seulement si la policy autorise (et donc avant devis) --}}
                                             @can('update', $demande)
                                                 <a href="{{ route('demandes.edit', $demande) }}"
                                                    class="btn btn-sm btn-outline-warning me-2"
@@ -119,7 +124,8 @@
                                                 📄 Télécharger le devis
                                             </a>
 
-                                            @if(is_null($demande->devis->reponse_client) && !$demande->supprime_par_client)
+                                            {{-- ✅ Affiche les boutons si EN ATTENTE --}}
+                                            @if($enAttente && !$demande->supprime_par_client)
                                                 <form action="{{ route('devis.accepter', $demande->devis->id) }}" method="POST" class="d-inline">
                                                     @csrf
                                                     <button type="submit" class="btn btn-sm btn-success me-1">✅ Accepter</button>
@@ -130,9 +136,14 @@
                                                     <button type="submit" class="btn btn-sm btn-danger">❌ Refuser</button>
                                                 </form>
                                             @else
+                                                {{-- ✅ Badge réponse (vert/rouge/jaune) --}}
                                                 <div class="mt-2">
-                                                    <span class="badge {{ $demande->devis->reponse_client === 'accepté' ? 'bg-success' : 'bg-danger' }}">
-                                                        Réponse : {{ ucfirst($demande->devis->reponse_client) }}
+                                                    <span class="badge
+                                                        @if($rep === 'accepté') bg-success
+                                                        @elseif($rep === 'refusé') bg-danger
+                                                        @else bg-warning text-dark
+                                                        @endif">
+                                                        Réponse : {{ ucfirst($rep ?? 'en attente') }}
                                                     </span>
                                                 </div>
                                             @endif

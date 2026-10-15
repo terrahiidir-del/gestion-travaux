@@ -12,7 +12,7 @@ use Illuminate\View\View;
 class AuthenticatedSessionController extends Controller
 {
     /**
-     * Display the login view.
+     * Afficher la vue de connexion.
      */
     public function create(): View
     {
@@ -20,7 +20,7 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
-     * Handle an incoming authentication request.
+     * Elle est appelée quand l'utilisateur envoie le formulaire login.
      */
     public function store(LoginRequest $request): RedirectResponse
     {
@@ -32,7 +32,7 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
-     * Destroy an authenticated session.
+     * Elle est appelée quand l'utilisateur clique sur logout
      */
     public function destroy(Request $request): RedirectResponse
     {
@@ -40,7 +40,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->invalidate();
 
-        $request->session()->regenerateToken();
+        $request->session()->regenerateToken();//génère un nouveau token CSRF pour la sécurité.
 
         return redirect('/');
     }

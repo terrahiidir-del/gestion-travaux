@@ -10,18 +10,14 @@ use Carbon\Carbon;
 
 class TechnicienController extends Controller
 {
-    /**
-     * (Optionnel) Page liste des techniciens
-     */
+    //Page liste des techniciens
+     
     public function index()
     {
         return view('techniciens.index');
     }
 
-    /**
-     * Renvoie les disponibilités FUTURES d’un technicien (JSON).
-     * Format: [{ date: 'YYYY-MM-DD', heure: 'HH:MM:SS', pris: bool }, ...]
-     */
+    //Renvoie les disponibilités 
     public function disponibilites(int $id): JsonResponse
     {
         $technicien = User::find($id);
@@ -30,11 +26,11 @@ class TechnicienController extends Controller
             return response()->json(['error' => 'Technicien introuvable.'], 404);
         }
 
-        $now = Carbon::now();
+        $now = Carbon::now();//Récupérer la date actuelle
 
         // Dispos futures uniquement (aujourd’hui: heures >= maintenant)
-        $dispos = Disponibilite::where('user_id', $id)
-            ->where(function ($q) use ($now) {
+        $dispos = Disponibilite::where('user_id', $id)//Chercher les disponibilités du technicien
+            ->where(function ($q) use ($now) {//Filtrer les disponibilités futures
                 $q->whereDate('date', '>', $now->toDateString())
                   ->orWhere(function ($q2) use ($now) {
                       $q2->whereDate('date', $now->toDateString())
@@ -45,7 +41,7 @@ class TechnicienController extends Controller
             ->orderBy('heure')
             ->get(['date', 'heure']);
 
-        if ($dispos->isEmpty()) {
+        if ($dispos->isEmpty()) {//verifie si ya des disponibilité du tech
             return response()->json([]);
         }
 

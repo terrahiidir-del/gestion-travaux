@@ -11,28 +11,26 @@ use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
-    /**
-     * Afficher le formulaire de profil.
-     */
+    // Afficher le formulaire modifier le profil.
+     
     public function edit(Request $request): View
     {
-        // La vue se trouve bien dans resources/views/profile/edit.blade.php
+        
         return view('profile.edit', [
             'user' => $request->user(),
         ]);
     }
 
-    /**
-     * Mettre à jour les informations du profil utilisateur.
-     */
+    // Mettre à jour les informations du profil utilisateur.
+     
     public function update(Request $request): RedirectResponse
     {
-        $user = $request->user();
+        $user = $request->user();// utilisateur connecté
 
         $validated = $request->validate([
             'name'            => ['required','string','max:255'],
             'prenom'          => ['nullable','string','max:255'],
-            'email'           => ['required','email','max:255','unique:users,email,'.$user->id],
+            'email'           => ['required','email','max:255','unique:users,email,'.$user->id],//l’email doit être unique dans la table users
             'telephone'       => ['nullable','string','max:30'],
             'adresse_postale' => ['nullable','string','max:255'],
             'code_postal'     => ['nullable','string','max:20'],
@@ -40,7 +38,7 @@ class ProfileController extends Controller
             'password'        => ['nullable','confirmed','min:8'],
         ]);
 
-        if (array_key_exists('email', $validated) && $validated['email'] !== $user->email) {
+        if (array_key_exists('email', $validated) && $validated['email'] !== $user->email) {//
             $user->email_verified_at = null;
         }
 
@@ -60,7 +58,7 @@ class ProfileController extends Controller
 
         $user->save();
 
-        return Redirect::route('profil.edit')->with('status', 'profile-updated');
+        return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
     /**
@@ -69,7 +67,7 @@ class ProfileController extends Controller
     public function destroy(Request $request): RedirectResponse
     {
         $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
+            'password' => ['required', 'current_password'],//vérifie le mot de passe
         ]);
 
         $user = $request->user();

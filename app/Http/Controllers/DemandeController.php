@@ -9,11 +9,11 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class DemandeController extends Controller
 {
-    use AuthorizesRequests;
+    use AuthorizesRequests;//vérifier les permissions via les Policies.
 
     public function index()
     {
-        // On charge aussi l'intervention + technicien associé
+        // affiche les demandes du client connecté
         $demandes = Demande::where('user_id', Auth::id())
             ->with(['devis', 'intervention.technicien'])
             ->orderBy('created_at', 'desc')
@@ -24,18 +24,18 @@ class DemandeController extends Controller
 
     public function show(Demande $demande)
 {
-    $user = Auth::user(); 
+    $user = Auth::user();
 
     // interdit si non connecté
     if (!$user) {
         abort(403);
     }
 
-    // autorisé si admin OU propriétaire de la demande
+    
     $isAdmin = $user->role === 'admin';
-    $isOwner = $demande->user_id === $user->id;
+    $isOwner = $demande->user_id === $user->id;//proprietaire de la demande 
 
-    if (!($isAdmin || $isOwner)) {
+    if (!($isAdmin || $isOwner)) {//Vérification des permissions
         abort(403);
     }
 
@@ -60,13 +60,11 @@ class DemandeController extends Controller
         $demandes     = $query->orderBy('created_at', 'desc')->get();
         $selectedDate = $request->input('date');
 
-        // ❌ NE PAS essayer d'écrire sur $demande->intervention ici.
-        // On formate proprement dans la vue.
 
         return view('demandes.index_admin', compact('demandes', 'selectedDate'));
     }
 
-    public function demandesValidees()
+    public function demandesValidees()//recupéré les demande deja valide dans la BDD
     {
         $demandes = Demande::where('statut', 'devis accepté')
             ->with(['user', 'devis'])
@@ -75,12 +73,12 @@ class DemandeController extends Controller
         return view('demandes.validees', compact('demandes'));
     }
 
-    public function create()
+    public function create()//crée une nouveau formulaire 
     {
         return view('demandes.create');
     }
 
-    public function store(Request $request)
+    public function store(Request $request)//enregistrer une nouvelle demande
     {
         $validated = $request->validate([
             'type_travaux' => 'required|string|max:255',
@@ -104,7 +102,7 @@ class DemandeController extends Controller
 
     public function edit(Demande $demande)
     {
-        $this->authorize('update', $demande);
+        $this->authorize('update', $demande);//pour modifier formulaire //demande autorisation de policy
         return view('demandes.edit', compact('demande'));
     }
 
@@ -124,8 +122,12 @@ class DemandeController extends Controller
         $validated = $request->validate($rules);
 
         $demande->update($validated);
-
-        $route = Auth::user()->role === 'admin' ? 'demandes.admin' : 'demandes.index';
+        //rediriger l'utilisateur selon son role 
+        if (Auth::user()->role === 'admin') {
+            $route = 'demandes.admin';
+        } else {
+            $route = 'demandes.index';
+}
         return redirect()->route($route)->with('success', 'Demande mise à jour.');
     }
 
@@ -137,10 +139,10 @@ class DemandeController extends Controller
 
         if (!$demande->devis) {
             $demande->delete();
-            return redirect()->route('demandes.index')->with('success', '✅ Demande supprimée.');
+            return redirect()->route('demandes.index')->with('success', ' Demande supprimée.');
         }
 
-        $demande->update(['supprime_par_client' => true]);
-        return redirect()->route('demandes.index')->with('success', '✅ Impossible de supprimer la demande (car un devis existe déjà).');
+        $demande->update(['supprime_par_client' => true]);//la demande appartient à l'utilisateur connecté.
+        return redirect()->route('demandes.index')->with('success', 'Impossible de supprimer la demande (car un devis existe déjà).');
     }
 }

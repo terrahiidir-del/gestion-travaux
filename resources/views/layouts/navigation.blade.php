@@ -81,7 +81,7 @@
 
                         <x-slot name="content">
                             {{-- 👉 Nouveau : lien vers l’édition du profil --}}
-                            <x-dropdown-link :href="route('profil.edit')">
+                            <x-dropdown-link :href="route('profile.edit')">
                                 {{ __('Mes informations') }}
                             </x-dropdown-link>
 
@@ -185,7 +185,7 @@
                     </div>
 
                     {{-- 👉 Nouveau : lien “Mes informations” (mobile) --}}
-                    <a href="{{ route('profil.edit') }}" class="block py-2 font-semibold hover:text-indigo-600">
+                    <a href="{{ route('profile.edit') }}" class="block py-2 font-semibold hover:text-indigo-600">
                         Mes informations
                     </a>
 

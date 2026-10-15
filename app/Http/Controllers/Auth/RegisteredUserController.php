@@ -9,21 +9,21 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules\Password;           // ✅ import règles mot de passe
-use Illuminate\Support\Facades\Schema;             // ✅ pour tester l'existence des colonnes
+use Illuminate\Validation\Rules\Password;           //  import règles mot de passe
+use Illuminate\Support\Facades\Schema;             // pour tester l'existence des colonnes
 
 class RegisteredUserController extends Controller
 {
-    /** 📄 Affiche le formulaire d'inscription. */
+    //  Affiche le formulaire d'inscription. */
     public function create()
     {
         return view('auth.register');
     }
 
-    /** ✅ Gère l'inscription de l'utilisateur. */
+    //Gère l'inscription de l'utilisateur. 
     public function store(Request $request)
     {
-        // ✅ Validation des champs (RGPD + mot de passe fort)
+        // Validation des champs (RGPD)
         $request->validate([
             'prenom'            => ['required','string','max:255'],
             'nom'               => ['required','string','max:255'],
@@ -43,10 +43,10 @@ class RegisteredUserController extends Controller
             ],
 
             'privacy'           => ['accepted'],          //  case “confidentialité” obligatoire
-            'marketing_optin'   => ['nullable','boolean'] //  optionnel
+            'marketing_optin'   => ['nullable','boolean'] 
         ]);
 
-        // ✅ Création de l'utilisateur
+        // Création de l'utilisateur
         $user = User::create([
             'prenom'          => $request->string('prenom')->trim(),
             'name'            => ucfirst($request->string('prenom')) . ' ' . strtoupper($request->string('nom')),
@@ -70,13 +70,13 @@ class RegisteredUserController extends Controller
             $user->save();
         }
 
-        // 👉 Déclenche l’envoi du lien de vérification
+        // Déclenche l’envoi du lien de vérification
         event(new Registered($user));
 
         // Connecte l’utilisateur
         Auth::login($user);
 
-        // 👉 Redirige vers la page "vérifiez votre email"
+        // Redirige vers la page "vérifiez votre email"
         return redirect()->route('verification.notice');
     }
 }

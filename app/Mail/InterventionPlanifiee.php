@@ -20,7 +20,7 @@ class InterventionPlanifiee extends Mailable
 
     public function build()
     {
-        return $this->subject('📅 Intervention planifiée')
+        return $this->subject(' Intervention planifiée')
                     ->markdown('emails.intervention.planifiee');
     }
 }

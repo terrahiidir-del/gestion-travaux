@@ -4,14 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\CookieConsent;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;   // ✅ pour Auth::logout()
+use Illuminate\Support\Facades\Auth;   
 use Illuminate\Support\Str;
 
 class RgdController extends Controller
 {
-    /**
-     * Enregistre le choix de cookies et dépose les cookies côté navigateur.
-     */
+    //Enregistre le choix de cookies et dépose les cookies côté navigateur.
     public function saveCookieConsent(Request $request)
     {
         $choices = [
@@ -31,8 +29,8 @@ class RgdController extends Controller
         ]);
 
         return back()
-            ->cookie('visitor_id', $visitorId, 60 * 24 * 365)                 // 1 an
-            ->cookie('cookie_consent', json_encode($choices), 60 * 24 * 365); // 1 an
+            ->cookie('visitor_id', $visitorId, 60 * 24 * 365)  // la durée de vie du cookie en minutes.
+            ->cookie('cookie_consent', json_encode($choices), 60 * 24 * 365); 
     }
 
     /**
@@ -70,7 +68,7 @@ class RgdController extends Controller
         $user->delete();
 
         // Déconnexion + hygiène de session
-        Auth::logout();                          // ou auth()->logout();
+        Auth::logout();                          
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

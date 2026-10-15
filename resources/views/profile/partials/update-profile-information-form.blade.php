@@ -15,7 +15,7 @@
     </form>
 
     {{-- Formulaire d’édition du profil --}}
-    <form method="post" action="{{ route('profil.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
         @csrf
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

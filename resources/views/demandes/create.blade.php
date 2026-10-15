@@ -8,9 +8,9 @@
 @endphp
 
 <div class="container py-5">
-    <h1 class="mb-4 text-primary fw-bold">📝 Nouvelle Demande</h1>
+    <h1 class="mb-4 text-primary fw-bold"> Nouvelle Demande</h1>
 
-    {{-- ✅ Barre de progression --}}
+    {{-- Barre de progression --}}
     <div class="progress mb-4" style="height: 25px;">
         <div id="progressBar" class="progress-bar progress-bar-striped bg-primary" role="progressbar" style="width: 33%">
             Étape 1/3
@@ -18,7 +18,7 @@
     </div>
 
     <form action="{{ route('demandes.store') }}" method="POST" id="demandeForm">
-        @csrf
+        @csrf 
 
         {{-- Étape 1 : Type de travaux --}}
         <div id="step1">

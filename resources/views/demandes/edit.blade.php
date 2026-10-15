@@ -28,7 +28,7 @@
             @error('description') <div class="text-danger">{{ $message }}</div> @enderror
         </div>
 
-        <button type="submit" class="btn btn-primary">💾 Enregistrer</button>
+        <button type="submit" class="btn btn-primary"> Enregistrer</button>
         <a href="{{ route('demandes.index') }}" class="btn btn-secondary">⬅ Retour</a>
     </form>
 </div>

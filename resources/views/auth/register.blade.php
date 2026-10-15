@@ -87,7 +87,7 @@
                 </div>
             </div>
 
-            {{-- ✅ Mot de passe avec conditions visibles + contraintes HTML --}}
+            {{-- Mot de passe avec conditions visibles + contraintes HTML --}}
             <div class="mb-3">
               <label for="password" class="form-label">Mot de passe</label>
               <input id="password" type="password"
@@ -184,7 +184,6 @@
 })();
 </script>
 
-{{-- Bonus UX : feedback instantané sur la confirmation --}}
 <script>
 document.addEventListener('input', () => {
   const p = document.getElementById('password');

@@ -15,7 +15,6 @@ class Devis extends Model
         'demande_id',
         'reponse_client',
     ];
-
     /**
      * Le devis appartient à une demande.
      */
@@ -33,7 +32,7 @@ class Devis extends Model
     }
 
     /**
-     * Accès à l'utilisateur via la demande liée.
+     * récupérer l’utilisateur lié au devis.
      */
     public function user()
     {

@@ -17,16 +17,14 @@ class DemandePolicy
         // Propriétaire uniquement peut changer
         if ($user->id !== $demande->user_id) return false;
 
-        if (method_exists($demande, 'devis') && $demande->devis()->exists()) {
+        if ($demande->devis()->exists()) {
             return false;
     }
 
         return true;
     }
 
-    /**
-     * L'utilisateur peut supprimer uniquement ses propres demandes.
-     */
+    //L'utilisateur peut supprimer uniquement ses propres demandes.
     public function delete(User $user, Demande $demande)
     {
         return $user->id === $demande->user_id;
